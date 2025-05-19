@@ -37,14 +37,14 @@ session.headers.update({'User-Agent': USER_AGENT})
 # Create cache directory if it doesn't exist
 os.makedirs(CACHE_DIR, exist_ok=True)
 
-def fetch_f1_calendar_internal(year: Optional[int] = None, max_fallbacks: int = 3) -> Tuple[List[Dict], int, str]:
+def fetch_f1_calendar_internal(year: Optional[str] = None, max_fallbacks: int = 3) -> Tuple[List[Dict], int, str]:
     """
     Fetch the Formula 1 race calendar for the specified year.
     If no year is specified, uses the current year, and falls back to previous years if needed.
     If the primary API fails, tries alternative APIs.
     
     Args:
-        year (int, optional): Year to fetch calendar for. Defaults to current year.
+        year (str, optional): Year to fetch calendar for. Defaults to current year.
         max_fallbacks (int, optional): Maximum number of years to fall back. Defaults to 3.
     
     Returns:
@@ -53,37 +53,34 @@ def fetch_f1_calendar_internal(year: Optional[int] = None, max_fallbacks: int = 
             - year_used: Year from which data was obtained
             - status: String indicating data source ("current", "fallback", "alt_api", "error")
     """
-    if year is None:
-        year = datetime.now().year
+    # Convert year string to int if provided, otherwise use current year
+    year_int = int(year) if year is not None else datetime.now().year
     
-    original_year = year
+    original_year = year_int
     fallback_count = 0
     status = "current"
-    
-    # Try primary API first (Ergast)
-    races = fetch_from_ergast_api(year)
+      # Try primary API first (Ergast)
+    races = fetch_from_ergast_api(year_int)
     if races:
-        return races, year, status
+        return races, year_int, status
     
     # If primary API failed for current year, try alternative APIs before falling back
-    if year == datetime.now().year:
-        alt_races = fetch_from_alternative_apis(year)
+    if year_int == datetime.now().year:
+        alt_races = fetch_from_alternative_apis(year_int)
         if alt_races:
-            return alt_races, year, "alt_api"
-    
-    # If alternative APIs also failed or it's not the current year, try fallbacks
+            return alt_races, year_int, "alt_api"
+      # If alternative APIs also failed or it's not the current year, try fallbacks
     while fallback_count < max_fallbacks:
         fallback_count += 1
-        year = original_year - fallback_count
-        print(f"Trying {year} from primary API...")
-        
-        # Try primary API for previous years
-        races = fetch_from_ergast_api(year)
+        year_int = original_year - fallback_count
+        print(f"Trying {year_int} from primary API...")
+          # Try primary API for previous years
+        races = fetch_from_ergast_api(year_int)
         if races:
-            return races, year, "fallback"
+            return races, year_int, "fallback"
     
     print(f"Could not find F1 calendar data for {original_year} or any of the {max_fallbacks} previous years.")
-    return [], year, "error"
+    return [], year_int, "error"
 
 @lru_cache(maxsize=CACHE_SIZE)
 def fetch_from_ergast_api(year: int) -> List[Dict]:
@@ -1186,9 +1183,10 @@ def main():
     # If only special info is requested (not calendar), handle it separately
     if show_special_info and not args.all_info:
         return handle_special_requests(args, year_to_use)
-    
-    # Fetch calendar data
-    races, year_used, status = fetch_f1_calendar_internal(args.year)
+      # Fetch calendar data
+    # Convert year to string if present, otherwise pass None
+    year_arg = str(args.year) if args.year is not None else None
+    races, year_used, status = fetch_f1_calendar_internal(year_arg)
     
     if not races:
         requested_year = args.year if args.year else datetime.now().year
