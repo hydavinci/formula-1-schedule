@@ -1,4 +1,4 @@
-from typing import Dict, Any, Callable
+from typing import Dict, Any
 from mcp.server.fastmcp import FastMCP
 from fetcher import fetch_race_calendar, fetch_team_standings, fetch_driver_standings
 
@@ -6,33 +6,49 @@ from fetcher import fetch_race_calendar, fetch_team_standings, fetch_driver_stan
 mcp = FastMCP("Formula 1 Schedule", timeout=60)  # 60 seconds timeout
 
 
-# Helper function to register tools with consistent naming and behavior
-def register_f1_tool(name_suffix: str, fetcher_func: Callable):
-    """
-    Register an MCP tool with standardized naming and documentation.
+# Register F1 calendar tool
+@mcp.tool("fetch_f1_calendar")
+async def fetch_f1_calendar_handler(year: str) -> Dict[str, Any]:
+  """
+  Fetches Formula 1 calendar data for a specified year
+  
+  Args:
+    year: The year for which to fetch F1 data (e.g., '2024', '2025')
     
-    Args:
-        name_suffix: Suffix for the tool name after 'fetch_f1_'
-        fetcher_func: The implementation function to call
-    """
-    @mcp.tool(f"fetch_f1_{name_suffix}")
-    async def handler(year: str) -> Dict[str, Any]:
-        """
-        Fetches Formula 1 {name_suffix.replace('_', ' ')} data for a specified year
-        
-        Args:
-            year: The year for which to fetch F1 data (e.g., '2024', '2025')
-            
-        Returns:
-            Dictionary with F1 {name_suffix.replace('_', ' ')} information
-        """
-        return fetcher_func(year)
+  Returns:
+    Dictionary with F1 calendar information
+  """
+  return fetch_race_calendar(year)
 
 
-# Register all tools
-register_f1_tool("calendar", fetch_race_calendar)
-register_f1_tool("team_standings", fetch_team_standings)
-register_f1_tool("driver_standings", fetch_driver_standings)
+# Register F1 team standings tool
+@mcp.tool("fetch_f1_team_standings")
+async def fetch_f1_team_standings_handler(year: str) -> Dict[str, Any]:
+  """
+  Fetches Formula 1 team standings data for a specified year
+  
+  Args:
+    year: The year for which to fetch F1 data (e.g., '2024', '2025')
+    
+  Returns:
+    Dictionary with F1 team standings information
+  """
+  return fetch_team_standings(year)
+
+
+# Register F1 driver standings tool
+@mcp.tool("fetch_f1_driver_standings")
+async def fetch_f1_driver_standings_handler(year: str) -> Dict[str, Any]:
+  """
+  Fetches Formula 1 driver standings data for a specified year
+  
+  Args:
+    year: The year for which to fetch F1 data (e.g., '2024', '2025')
+    
+  Returns:
+    Dictionary with F1 driver standings information
+  """
+  return fetch_driver_standings(year)
 
 
 if __name__ == "__main__":

@@ -53,8 +53,8 @@ The server exposes three MCP tools, all following the same simple parameter patt
 | Tool Name | Description | Example Use |
 |-----------|-------------|-------------|
 | `fetch_f1_calendar` | Get race schedule for a year | `{"name": "fetch_f1_calendar", "parameters": {"year": "2025"}}` |
-| `fetch_f1_team_standings` | Get team standings | `{"name": "fetch_f1_team_standings", "parameters": {"year": "2024"}}` |
-| `fetch_f1_driver_standings` | Get driver standings | `{"name": "fetch_f1_driver_standings", "parameters": {"year": "2024"}}` |
+| `fetch_f1_team_standings` | Get team standings | `{"name": "fetch_f1_team_standings", "parameters": {"year": "2025"}}` |
+| `fetch_f1_driver_standings` | Get driver standings | `{"name": "fetch_f1_driver_standings", "parameters": {"year": "2025"}}` |
 
 ### Parameters
 
