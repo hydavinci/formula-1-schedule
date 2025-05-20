@@ -1,18 +1,9 @@
-import logging
 from typing import Dict, Any
 from mcp.server.fastmcp import FastMCP
-from fetcher import fetch_f1_calendar_internal
+from fetcher import fetch_race_calendar
 
-# Setup logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
-)
-logger = logging.getLogger('f1_server')
-
-# Initialize FastMCP with correct service name
-mcp = FastMCP("Formula 1 Schedule")
+# Initialize FastMCP with correct service name and longer timeout
+mcp = FastMCP("Formula 1 Schedule", timeout=60)  # 60 seconds timeout
 
 
 @mcp.tool("fetch_f1_calendar")
@@ -26,24 +17,7 @@ async def fetch_f1_calendar(year: str) -> Dict[str, Any]:
     Returns:
       Dict[str, Any]: F1 calendar information for the specified year
     """
-    try:
-        races, year_used, status = fetch_f1_calendar_internal(year)
-        
-        # Format the response in a clean structure
-        return {
-            "races": races,
-            "year": year_used,
-            "status": status,
-            "count": len(races)
-        }
-    except Exception as e:
-        logger.error(f"Error fetching F1 calendar: {e}")
-        return {
-            "races": [],
-            "year": year,
-            "status": "error",
-            "error_message": str(e),
-            "count": 0        }
+    return fetch_race_calendar(year)
 
 
 if __name__ == "__main__":
