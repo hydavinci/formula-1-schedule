@@ -4,11 +4,11 @@ A Model Context Protocol (MCP) server that provides Formula 1 race schedules for
 
 ## Features
 
-- Fetch Formula 1 race calendars for any year
-- Automatic fallback to previous years if data for the requested year isn't available
-- Multiple API sources to ensure data reliability
-- Response caching for improved performance
-- Comprehensive race information including dates, circuit details, and session times
+- **Race Data**: Fetch Formula 1 race calendars for any year with dates, locations and round information
+- **Team Stats**: Get complete team standings with points and positions for current/past seasons
+- **Driver Stats**: Access driver standings with details including nationality, team, and code
+- **Data Reliability**: Robust parsing of Formula 1 website with error handling
+- **Simple Integration**: Easy-to-use MCP interface with consistent parameter structure
 
 ## Installation
 
@@ -46,48 +46,41 @@ docker run -p 8000:8000 f1-schedule-mcp
 
 ## Usage
 
-The server exposes the following MCP tool:
+The server exposes three MCP tools, all following the same simple parameter pattern:
 
-### `fetch_f1_calendar`
+### Available Tools
 
-Retrieves the Formula 1 race calendar for a specified year.
+| Tool Name | Description | Example Use |
+|-----------|-------------|-------------|
+| `fetch_f1_calendar` | Get race schedule for a year | `{"name": "fetch_f1_calendar", "parameters": {"year": "2025"}}` |
+| `fetch_f1_team_standings` | Get team standings | `{"name": "fetch_f1_team_standings", "parameters": {"year": "2024"}}` |
+| `fetch_f1_driver_standings` | Get driver standings | `{"name": "fetch_f1_driver_standings", "parameters": {"year": "2024"}}` |
 
-**Parameters:**
-- `year` (string): The year for which to fetch the F1 calendar
+### Parameters
 
-**Returns:**
-- JSON object with Formula 1 calendar information for the specified year
-
-**Example Request:**
-```json
-{
-  "name": "fetch_f1_calendar",
-  "parameters": {
-    "year": "2025"
-  }
-}
-```
+All tools use the same parameter:
+- `year` (string): The year for which to fetch Formula 1 data
 
 ## Configuration
 
 The server can be configured using the `smithery.yaml` file for deployment with [Smithery](https://smithery.ai/).
 
+## Project Structure
+
+| File | Description |
+|------|-------------|
+| `server.py` | MCP server implementation with tool registration |
+| `fetcher.py` | Core data retrieval logic with shared parsing functions |
+| `requirements.txt` | Python dependencies |
+| `Dockerfile` | Container build configuration |
+| `smithery.yaml` | Smithery deployment configuration |
+
 ## Dependencies
 
-- fastmcp: MCP server implementation
-- requests: HTTP client for API requests
-- beautifulsoup4: HTML parsing library
-- typing-extensions: Extended type hints
-
-## Development
-
-The project structure is organized as follows:
-
-- `server.py`: MCP server implementation
-- `fetcher.py`: F1 calendar data retrieval logic
-- `requirements.txt`: Python dependencies
-- `Dockerfile`: Container definition
-- `smithery.yaml`: Smithery configuration
+- **fastmcp**: MCP server implementation
+- **requests**: HTTP client for API requests
+- **beautifulsoup4**: HTML parsing for data extraction
+- **typing-extensions**: Type hints
 
 ## License
 
