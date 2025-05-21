@@ -5,6 +5,7 @@ A Model Context Protocol (MCP) server that provides Formula 1 race schedules for
 ## Features
 
 - **Race Data**: Fetch Formula 1 race calendars for any year with dates, locations and round information
+- **Race Results**: Get race results including winner, car, laps, and time information
 - **Team Stats**: Get complete team standings with points and positions for current/past seasons
 - **Driver Stats**: Access driver standings with details including nationality, team, and code
 - **Data Reliability**: Robust parsing of Formula 1 website with error handling
@@ -55,6 +56,7 @@ The server exposes three MCP tools, all following the same simple parameter patt
 | `fetch_f1_calendar` | Get race schedule for a year | `{"name": "fetch_f1_calendar", "parameters": {"year": "2025"}}` |
 | `fetch_f1_team_standings` | Get team standings | `{"name": "fetch_f1_team_standings", "parameters": {"year": "2025"}}` |
 | `fetch_f1_driver_standings` | Get driver standings | `{"name": "fetch_f1_driver_standings", "parameters": {"year": "2025"}}` |
+| `fetch_f1_race_results` | Get race results | `{"name": "fetch_f1_race_results", "parameters": {"year": "2025"}}` |
 
 ### Parameters
 
@@ -70,7 +72,7 @@ The server can be configured using the `smithery.yaml` file for deployment with 
 | File | Description |
 |------|-------------|
 | `server.py` | MCP server implementation with tool registration |
-| `fetcher.py` | Core data retrieval logic with shared parsing functions |
+| `fetcher.py` | Core data retrieval logic with shared parsing functions for calendar, results, and standings |
 | `requirements.txt` | Python dependencies |
 | `Dockerfile` | Container build configuration |
 | `smithery.yaml` | Smithery deployment configuration |

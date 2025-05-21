@@ -1,6 +1,6 @@
 from typing import Dict, Any
 from mcp.server.fastmcp import FastMCP
-from fetcher import fetch_race_calendar, fetch_team_standings, fetch_driver_standings
+from fetcher import fetch_race_calendar, fetch_team_standings, fetch_driver_standings, fetch_race_results
 
 # Initialize FastMCP with correct service name and longer timeout
 mcp = FastMCP("Formula 1 Schedule", timeout=60)  # 60 seconds timeout
@@ -49,6 +49,21 @@ async def fetch_f1_driver_standings_handler(year: str) -> Dict[str, Any]:
     Dictionary with F1 driver standings information
   """
   return fetch_driver_standings(year)
+
+
+# Register F1 race results tool
+@mcp.tool("fetch_f1_race_results")
+async def fetch_f1_race_results_handler(year: str) -> Dict[str, Any]:
+  """
+  Fetches Formula 1 race results data for a specified year
+  
+  Args:
+    year: The year for which to fetch F1 data (e.g., '2024', '2025')
+    
+  Returns:
+    Dictionary with F1 race results information
+  """
+  return fetch_race_results(year)
 
 
 if __name__ == "__main__":

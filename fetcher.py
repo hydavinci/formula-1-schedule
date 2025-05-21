@@ -272,6 +272,82 @@ def fetch_driver_standings(year: str) -> Dict[str, Any]:
     return fetch_and_parse(url, parse_driver_standings, "driver standings")
 
 
+def fetch_race_results(year: str) -> Dict[str, Any]:
+    """
+    Fetches the Formula 1 race results for a specified year.
+
+    Args:
+        year (str): The year for which to fetch the F1 race results
+
+    Returns:
+        Dict[str, Any]: F1 race results information for the specified year
+    """
+    url = f"https://www.formula1.com/en/results/{year}/races"
+    logger.info(f"Fetching F1 race results for {year} from {url}")
+
+    def parse_race_results(soup: BeautifulSoup) -> Dict[str, Any]:
+        races = []
+        table = soup.find("table")
+        
+        if table and table.find("tbody"):
+            rows = table.find("tbody").find_all("tr")
+            for row in rows:
+                race_info = {}
+                cells = row.find_all("td")
+                
+                if len(cells) >= 5:  # We need at least grand prix, date, winner, car, and laps
+                    # Get Grand Prix info
+                    gp_cell = cells[0]
+                    gp_link = gp_cell.find("a")
+                    
+                    if gp_link:
+                        race_info["name"] = gp_link.text.strip()
+                        href = gp_link.get("href", "")
+                        race_info["url"] = f"https://www.formula1.com{href}" if href else ""
+                    else:
+                        race_info["name"] = gp_cell.text.strip()
+                    
+                    # Get date
+                    race_info["date"] = cells[1].text.strip()
+                    
+                    # Get winner
+                    winner_cell = cells[2]
+                    winner_link = winner_cell.find("a")
+                    if winner_link:
+                        winner_name = winner_link.text.strip()
+                        # Clean up the driver code format if present
+                        if len(winner_name) >= 3:
+                            driver_code = winner_name[-3:]
+                            driver_name = winner_name[:-3].strip().replace('\xa0', ' ')
+                            race_info["winner_name"] = driver_name
+                            race_info["winner_code"] = driver_code
+                        else:
+                            race_info["winner_name"] = winner_name
+                    else:
+                        race_info["winner_name"] = winner_cell.text.strip()
+                    
+                    # Get car/team
+                    race_info["winner_car"] = cells[3].text.strip()
+                    
+                    # Get laps
+                    race_info["laps"] = cells[4].text.strip()
+                    
+                    # Get time if available
+                    if len(cells) > 5:
+                        race_info["time"] = cells[5].text.strip()
+                    
+                    races.append(race_info)
+
+        return {
+            "year": year,
+            "source": url,
+            "races": races,
+            "total_races": len(races),
+        }
+
+    return fetch_and_parse(url, parse_race_results, "race results")
+
+
 if __name__ == "__main__":
     # Test the functions
     import json
@@ -289,3 +365,4 @@ if __name__ == "__main__":
     test_and_print(fetch_race_calendar, "Race Calendar")
     test_and_print(fetch_team_standings, "Team Standings")
     test_and_print(fetch_driver_standings, "Driver Standings")
+    test_and_print(fetch_race_results, "Race Results")
