@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/hydavinci-formula-1-schedule-badge.png)](https://mseep.ai/app/hydavinci-formula-1-schedule)
+
 # Formula 1 Schedule MCP Server
 
 A Model Context Protocol (MCP) server that provides Formula 1 race schedules for any specified year. The server can retrieve current and historical F1 race calendars with detailed information about each race.
