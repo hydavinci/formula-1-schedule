@@ -1,0 +1,35 @@
+[project]
+name = "formula-1-schedule-mcp-server"
+version = "0.1.0"
+description = "A Model Context Protocol (MCP) server that provides Formula 1 race schedules, standings, and results for any specified year"
+authors = [
+    {name = "hydavinci"}
+]
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+keywords = ["mcp", "formula1", "f1", "racing", "schedule", "standings", "fastapi", "ai"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+    "Topic :: Scientific/Engineering :: Information Analysis"
+]
+dependencies = [
+    "requests>=2.31.0",
+    "fastmcp>=0.2.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/hydavinci/formula-1-schedule"
+Repository = "https://github.com/hydavinci/formula-1-schedule"
+Issues = "https://github.com/hydavinci/formula-1-schedule/issues"
+
+[project.scripts]
+formula-1-schedule-mcp-server = "src.server:main"
