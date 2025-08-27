@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/hydavinci-formula-1-schedule-badge.png)](https://mseep.ai/app/hydavinci-formula-1-schedule)
+
 # Formula 1 Schedule MCP Server
 
 A Model Context Protocol (MCP) server that provides comprehensive Formula 1 data including race schedules, standings, and results for any specified year. Built with FastMCP, this server offers reliable access to current and historical F1 data through web scraping.
