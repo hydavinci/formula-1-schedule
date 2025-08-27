@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import logging
 import re
-from typing import Dict, Any, List, Callable
+from typing import Dict, Any, Callable
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
